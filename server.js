@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors');
 const uuid = require('uuid').v4;
 
@@ -17,21 +18,21 @@ const db = [
   },
 ];
 
-app.get('/testimonials', (res, req) => {
+app.get('/testimonials', (req, res) => {
   res.json(db);
 });
 
-app.get('/testimonials/:id', (res, req) => {
+app.get('/testimonials/:id', (req, res) => {
   res.json(db.find((data) => data.id == req.params.id));
 });
 
-app.get('/testimonials/random', (res, req) => {
+app.get('/testimonials/random', (req, res) => {
   res.json(
     db.find((req) => req.id === Math.floor(Math.random() * db.length) + 1)
   );
 });
 
-app.post('/testimonials', (res, req) => {
+app.post('/testimonials', (req, res) => {
   const { author, text } = req.body;
   const id = uuid();
   const newTestimonial = { id: id, author: author, text: text };
@@ -41,7 +42,7 @@ app.post('/testimonials', (res, req) => {
 
 app.put(
   '/testimonials/:id',
-  (res, req) => {
+  (req, res) => {
     const { author, text } = req.body;
     const id = +req.params.id;
     const testimonial = db.find((testimonial) => testimonial.id === id);
@@ -56,7 +57,7 @@ app.put(
 
 app.delete(
   '/testimonials/:id',
-  (res, req) => {
+  (req, res) => {
     const id = +req.params.id;
     db.splice(
       db.findIndex((testimonial) => testimonial.id === id),
@@ -70,7 +71,7 @@ app.delete(
 );
 
 app.use((req, res) => {
-  res.json(404).send('Not found...');
+  res.status(404).send('Not found...');
 });
 
 app.listen(8000, () => {
