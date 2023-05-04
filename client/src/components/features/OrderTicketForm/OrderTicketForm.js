@@ -15,7 +15,9 @@ import {
   addSeatRequest,
   getRequests,
   loadSeatsRequest,
+  loadSeats,
 } from '../../../redux/seatsRedux';
+import io from 'socket.io-client';
 
 import './OrderTicketForm.scss';
 import SeatChooser from './../SeatChooser/SeatChooser';
@@ -27,15 +29,15 @@ const OrderTicketForm = () => {
 
   // update seats
 
-  const delaySeats = 120000;
+  const socket = io(
+    process.env.NODE_ENV === 'production' ? '/' : 'http://localhost:8000/'
+  );
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      dispatch(loadSeatsRequest());
-    }, delaySeats);
-
-    return () => clearInterval(interval);
-  }, [dispatch]);
+    socket.on('seatsUpdated', (seats) => {
+      dispatch(loadSeats(seats));
+    });
+  }, [dispatch, socket]);
 
   // end update seats
 
