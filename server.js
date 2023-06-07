@@ -41,9 +41,12 @@ io.on('connection', (socket) => {
   console.log('New Socket!', +socket.id);
 });
 
-mongoose.connect('mongodb://localhost:27017/NewWaveDB', {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  'mongodb+srv://koswro:AYyRfr96H535YJGc@cluster0.gpgfj7z.mongodb.net/NewWaveDB',
+  {
+    useNewUrlParser: true,
+  }
+);
 const db = mongoose.connection;
 
 db.once('open', () => {
